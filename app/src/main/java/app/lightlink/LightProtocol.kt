@@ -31,9 +31,9 @@ object LightProtocol {
         val length = bytes[2]
         require(length in 1..MAX_PAYLOAD_BYTES) { "طول الرسالة غير صالح." }
         require(bytes.size == 3 + length + 1) { "طول الإطار لا يطابق البيانات." }
-        val payload = bytes.sliceArray(3 until 3 + length)
+        val payload = bytes.sliceArray(3 until 3 + length).map { it.toByte() }.toByteArray()
         require(bytes.last() == crc8(payload)) { "فشل التحقق من سلامة الرسالة (CRC)." }
-        payload.toByteArray().toString(Charsets.UTF_8)
+        payload.toString(Charsets.UTF_8)
     }
 
     fun crc8(bytes: ByteArray): Int {
